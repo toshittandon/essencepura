@@ -1,0 +1,158 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Design system for organic cosmetics brand - Terra Botanica
+   Elegant, minimalistic with earthy, natural tones
+   All colors MUST be HSL for consistency */
+
+@layer base {
+  :root {
+    /* Brand Colors - Warm, earthy palette */
+    --background: 46 12% 97%;          /* Warm cream white */
+    --foreground: 20 10% 15%;          /* Deep warm brown */
+
+    --card: 46 20% 96%;
+    --card-foreground: 20 10% 15%;
+
+    --popover: 46 20% 98%;
+    --popover-foreground: 20 10% 15%;
+
+    /* Primary - Sage Green */
+    --primary: 95 15% 45%;             /* Sophisticated sage */
+    --primary-foreground: 46 20% 98%;
+
+    /* Secondary - Warm Beige */
+    --secondary: 40 25% 88%;           /* Soft warm beige */
+    --secondary-foreground: 20 15% 25%;
+
+    --muted: 45 15% 92%;               /* Subtle cream */
+    --muted-foreground: 25 8% 50%;
+
+    /* Accent - Terracotta */
+    --accent: 25 35% 75%;              /* Warm terracotta */
+    --accent-foreground: 20 15% 25%;
+
+    --destructive: 0 65% 55%;
+    --destructive-foreground: 46 20% 98%;
+
+    --border: 42 15% 85%;
+    --input: 42 20% 90%;
+    --ring: 95 15% 45%;
+
+    --radius: 0.75rem;
+
+    /* Brand-specific tokens */
+    --sage: 95 15% 45%;                /* Primary sage green */
+    --sage-light: 95 20% 65%;          /* Lighter sage */
+    --sage-dark: 95 20% 35%;           /* Darker sage */
+    
+    --cream: 46 25% 94%;               /* Warm cream */
+    --beige: 40 20% 85%;               /* Natural beige */
+    --terracotta: 25 35% 70%;          /* Earthy terracotta */
+    --warm-white: 46 15% 97%;          /* Premium white */
+
+    /* Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(var(--sage-light)), hsl(var(--sage)));
+    --gradient-product: linear-gradient(180deg, hsl(var(--warm-white)), hsl(var(--cream)));
+    --gradient-accent: linear-gradient(135deg, hsl(var(--terracotta)), hsl(var(--accent)));
+
+    /* Shadows */
+    --shadow-soft: 0 4px 20px -4px hsl(var(--sage) / 0.15);
+    --shadow-medium: 0 8px 30px -6px hsl(var(--sage) / 0.2);
+    --shadow-product: 0 12px 40px -8px hsl(var(--sage) / 0.25);
+
+    /* Transitions */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+    --sidebar-background: 46 20% 96%;
+    --sidebar-foreground: 20 10% 30%;
+    --sidebar-primary: 95 15% 45%;
+    --sidebar-primary-foreground: 46 20% 98%;
+    --sidebar-accent: 45 15% 90%;
+    --sidebar-accent-foreground: 20 15% 25%;
+    --sidebar-border: 42 15% 85%;
+    --sidebar-ring: 95 15% 45%;
+  }
+
+  .dark {
+    --background: 20 15% 8%;
+    --foreground: 46 15% 92%;
+
+    --card: 20 15% 10%;
+    --card-foreground: 46 15% 92%;
+
+    --popover: 20 15% 8%;
+    --popover-foreground: 46 15% 92%;
+
+    --primary: 95 20% 65%;
+    --primary-foreground: 20 15% 8%;
+
+    --secondary: 25 15% 15%;
+    --secondary-foreground: 46 15% 92%;
+
+    --muted: 20 10% 15%;
+    --muted-foreground: 40 8% 65%;
+
+    --accent: 25 25% 25%;
+    --accent-foreground: 46 15% 92%;
+
+    --destructive: 0 60% 50%;
+    --destructive-foreground: 46 15% 92%;
+
+    --border: 20 15% 18%;
+    --input: 20 15% 18%;
+    --ring: 95 20% 65%;
+
+    --sage: 95 20% 65%;
+    --sage-light: 95 25% 75%;
+    --sage-dark: 95 15% 45%;
+    --cream: 25 15% 12%;
+    --beige: 25 10% 18%;
+    --terracotta: 25 30% 45%;
+    --warm-white: 20 15% 10%;
+
+    --sidebar-background: 20 15% 8%;
+    --sidebar-foreground: 46 15% 85%;
+    --sidebar-primary: 95 20% 65%;
+    --sidebar-primary-foreground: 20 15% 8%;
+    --sidebar-accent: 20 10% 15%;
+    --sidebar-accent-foreground: 46 15% 85%;
+    --sidebar-border: 20 15% 18%;
+    --sidebar-ring: 95 20% 65%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif;
+  }
+}
+
+/* Custom animations and utilities */
+@layer utilities {
+  .animate-hover-lift {
+    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-medium;
+  }
+
+  .animate-hover-scale {
+    @apply transition-transform duration-300 hover:scale-105;
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-sage to-sage-dark bg-clip-text text-transparent;
+  }
+
+  .backdrop-blur-glass {
+    @apply backdrop-blur-sm bg-white/80 dark:bg-gray-900/80;
+  }
+}
