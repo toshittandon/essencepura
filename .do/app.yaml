@@ -1,0 +1,8 @@
+spec:
+  name: essencepura
+  static_sites:
+    - name: web
+      build_command: "npm ci && npm run build"
+      output_dir: dist
+      index_document: index.html
+      error_document: index.html
