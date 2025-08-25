@@ -1,0 +1,7 @@
+name = "essencepura"
+main = "dist/index.html"
+compatibility_date = "2025-08-25"
+
+[site]
+bucket = "dist"
+entry-point = "."
