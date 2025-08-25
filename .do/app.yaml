@@ -1,8 +1,13 @@
 spec:
   name: essencepura
-  static_sites:
+  services:
     - name: web
+      environment_slug: node-js
+      instance_size_slug: basic-xxs
       build_command: "npm ci && npm run build"
-      output_dir: dist
-      index_document: index.html
-      error_document: index.html
+      run_command: "npm start"
+      http_port: 3000
+      routes:
+        - path: /
+      health_check:
+        http_path: "/"
