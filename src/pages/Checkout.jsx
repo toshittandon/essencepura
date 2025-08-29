@@ -1,23 +1,103 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Elements } from "@stripe/react-stripe-js";
 import { useCart } from "@/contexts/CartContext";
 import { useUser } from "@/contexts/UserContext";
+import { useProducts } from "@/contexts/ProductContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Link, Navigate } from "react-router-dom";
+import { AlertTriangle, Loader2 } from "lucide-react";
 import stripePromise from "@/lib/stripe";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import CheckoutForm from "@/components/CheckoutForm";
+import { toast } from "sonner";
 
 const Checkout = () => {
-  const { items, getTotalPrice, getTotalItems } = useCart();
+  const { items, getTotalPrice, getTotalItems, updateQuantity, removeFromCart } = useCart();
   const { isAuthenticated } = useUser();
+  const { getProduct } = useProducts();
   const [clientSecret, setClientSecret] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isValidatingProducts, setIsValidatingProducts] = useState(true);
+  const [productValidationErrors, setProductValidationErrors] = useState([]);
+
+  // Validate products against Appwrite data on mount
+  useEffect(() => {
+    const validateProducts = async () => {
+      setIsValidatingProducts(true);
+      const errors = [];
+      
+      try {
+        for (const item of items) {
+          try {
+            const currentProduct = await getProduct(item.id || item.$id);
+            
+            // Check if product still exists
+            if (!currentProduct) {
+              errors.push({
+                type: 'not_found',
+                item,
+                message: `${item.name} is no longer available`
+              });
+              continue;
+            }
+            
+            // Check stock availability
+            if (currentProduct.stock !== undefined && currentProduct.stock < item.quantity) {
+              errors.push({
+                type: 'insufficient_stock',
+                item,
+                currentProduct,
+                message: `Only ${currentProduct.stock} ${item.name} available (you have ${item.quantity} in cart)`
+              });
+            }
+            
+            // Check price changes
+            if (currentProduct.price !== item.price) {
+              errors.push({
+                type: 'price_change',
+                item,
+                currentProduct,
+                message: `Price for ${item.name} has changed from $${item.price} to $${currentProduct.price}`
+              });
+            }
+            
+          } catch (error) {
+            console.error(`Error validating product ${item.id}:`, error);
+            errors.push({
+              type: 'validation_error',
+              item,
+              message: `Unable to validate ${item.name}`
+            });
+          }
+        }
+        
+        setProductValidationErrors(errors);
+        
+        // Show toast for errors
+        if (errors.length > 0) {
+          toast.error(`${errors.length} item(s) in your cart need attention`);
+        }
+        
+      } catch (error) {
+        console.error('Error validating products:', error);
+        toast.error('Unable to validate cart items');
+      } finally {
+        setIsValidatingProducts(false);
+      }
+    };
+    
+    if (items.length > 0) {
+      validateProducts();
+    } else {
+      setIsValidatingProducts(false);
+    }
+  }, [items, getProduct]);
 
   // Redirect to login if not authenticated
   if (!isAuthenticated) {
@@ -33,23 +113,71 @@ const Checkout = () => {
   const tax = subtotal * 0.08;
   const total = subtotal + tax;
 
+  // Handle product validation errors
+  const handleFixStockIssue = (error) => {
+    if (error.type === 'insufficient_stock') {
+      updateQuantity(error.item.id, error.currentProduct.stock);
+      toast.success(`Updated ${error.item.name} quantity to ${error.currentProduct.stock}`);
+    } else if (error.type === 'not_found') {
+      removeFromCart(error.item.id);
+      toast.success(`Removed ${error.item.name} from cart`);
+    }
+  };
+
   const handleCreatePaymentIntent = async () => {
+    // Don't proceed if there are validation errors
+    if (productValidationErrors.length > 0) {
+      toast.error('Please resolve cart issues before proceeding');
+      return;
+    }
+    
     setIsLoading(true);
     
     try {
+      // Re-validate products one more time before payment
+      const validatedItems = [];
+      
+      for (const item of items) {
+        try {
+          const currentProduct = await getProduct(item.id || item.$id);
+          
+          if (!currentProduct) {
+            throw new Error(`${item.name} is no longer available`);
+          }
+          
+          if (currentProduct.stock !== undefined && currentProduct.stock < item.quantity) {
+            throw new Error(`Insufficient stock for ${item.name}`);
+          }
+          
+          // Use current price from Appwrite
+          validatedItems.push({
+            id: currentProduct.$id,
+            name: currentProduct.name,
+            price: currentProduct.price, // Use current price
+            quantity: item.quantity,
+          });
+          
+        } catch (error) {
+          console.error(`Product validation failed for ${item.name}:`, error);
+          toast.error(error.message);
+          setIsLoading(false);
+          return;
+        }
+      }
+      
+      // Calculate total with current prices
+      const validatedTotal = validatedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const validatedTax = validatedTotal * 0.08;
+      const finalTotal = validatedTotal + validatedTax;
+      
       const response = await fetch(`${import.meta.env.VITE_API_URL}/create-checkout-session`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          items: items.map(item => ({
-            id: item.id,
-            name: item.name,
-            price: item.price,
-            quantity: item.quantity,
-          })),
-          total: Math.round(total * 100), // Convert to cents
+          items: validatedItems,
+          total: Math.round(finalTotal * 100), // Convert to cents
         }),
       });
 
@@ -62,7 +190,7 @@ const Checkout = () => {
       }
     } catch (error) {
       console.error('Error creating payment intent:', error);
-      // In a real app, show error message to user
+      toast.error('Failed to create payment session');
     } finally {
       setIsLoading(false);
     }
@@ -95,39 +223,80 @@ const Checkout = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {/* Order Summary */}
-            <div>
-              <Card>
-                <CardHeader>
-                  <CardTitle>Order Summary</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {/* Order Items */}
-                  <div className="space-y-4">
-                    {items.map((item) => (
-                      <div key={item.id} className="flex items-center gap-4">
-                        <div className="w-16 h-16 bg-gradient-to-br from-warm-white to-cream rounded-lg overflow-hidden">
-                          <img
-                            src={item.image}
-                            alt={item.name}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                        <div className="flex-grow">
-                          <h4 className="font-medium">{item.name}</h4>
-                          <p className="text-sm text-muted-foreground">
-                            Quantity: {item.quantity}
-                          </p>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-medium">
-                            ${(item.price * item.quantity).toFixed(2)}
-                          </p>
-                        </div>
+          {/* Product Validation Errors */}
+          {productValidationErrors.length > 0 && (
+            <div className="mb-8">
+              <Alert className="border-orange-200 bg-orange-50">
+                <AlertTriangle className="h-4 w-4 text-orange-600" />
+                <AlertDescription>
+                  <div className="space-y-2">
+                    <p className="font-medium text-orange-800">Cart items need attention:</p>
+                    {productValidationErrors.map((error, index) => (
+                      <div key={index} className="flex items-center justify-between">
+                        <span className="text-sm text-orange-700">{error.message}</span>
+                        {(error.type === 'insufficient_stock' || error.type === 'not_found') && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleFixStockIssue(error)}
+                            className="ml-2"
+                          >
+                            Fix
+                          </Button>
+                        )}
                       </div>
                     ))}
                   </div>
+                </AlertDescription>
+              </Alert>
+            </div>
+          )}
+
+          {/* Loading State */}
+          {isValidatingProducts && (
+            <div className="text-center py-8">
+              <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+              <p className="text-muted-foreground">Validating cart items...</p>
+            </div>
+          )}
+
+          {!isValidatingProducts && (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+              {/* Order Summary */}
+              <div>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Order Summary</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {/* Order Items */}
+                    <div className="space-y-4">
+                      {items.map((item) => (
+                        <div key={item.id} className="flex items-center gap-4">
+                          <div className="w-16 h-16 bg-gradient-to-br from-warm-white to-cream rounded-lg overflow-hidden">
+                            <img
+                              src={item.image || "/placeholder.svg"}
+                              alt={item.name}
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                e.target.src = "/placeholder.svg";
+                              }}
+                            />
+                          </div>
+                          <div className="flex-grow">
+                            <h4 className="font-medium">{item.name}</h4>
+                            <p className="text-sm text-muted-foreground">
+                              Quantity: {item.quantity}
+                            </p>
+                          </div>
+                          <div className="text-right">
+                            <p className="font-medium">
+                              ${(item.price * item.quantity).toFixed(2)}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
 
                   <Separator />
 
@@ -195,11 +364,13 @@ const Checkout = () => {
 
                       <Button 
                         onClick={handleCreatePaymentIntent}
-                        disabled={isLoading}
-                        className="w-full bg-sage hover:bg-sage-dark"
+                        disabled={isLoading || productValidationErrors.length > 0}
+                        className="w-full bg-sage hover:bg-sage-dark disabled:opacity-50"
                         size="lg"
                       >
-                        {isLoading ? "Processing..." : "Continue to Payment"}
+                        {isLoading ? "Processing..." : 
+                         productValidationErrors.length > 0 ? "Resolve Cart Issues First" :
+                         "Continue to Payment"}
                       </Button>
                     </div>
                   ) : (
@@ -211,6 +382,7 @@ const Checkout = () => {
               </Card>
             </div>
           </div>
+          )}
 
           {/* Back to Cart */}
           <div className="mt-8 text-center">
