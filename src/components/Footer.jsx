@@ -12,9 +12,18 @@ const Footer = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {/* Brand Column */}
             <div className="lg:col-span-1">
-              <Link to="/" className="font-serif text-2xl font-semibold text-foreground mb-4 block">
-                Essence Pura
-              </Link>
+              <div className="mb-4">
+                <div className="flex mb-2">
+                  <img 
+                    src="/uploads/1.png" 
+                    alt="Pura Essence Logo" 
+                    className="h-16 w-auto"
+                  />
+                </div>
+                <Link to="/" className="font-serif text-2xl font-semibold text-foreground block">
+                  Essence Pura
+                </Link>
+              </div>
               <p className="text-muted-foreground mb-6 leading-relaxed">
                 Crafting organic self-care essentials that honor both your skin and the environment. 
               </p>

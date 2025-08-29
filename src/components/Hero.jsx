@@ -7,12 +7,18 @@ const Hero = () => {
     <section className="relative min-h-[80vh] flex items-center justify-center bg-gradient-to-br from-warm-white via-cream to-beige overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-20 left-20 w-32 h-32 rounded-full bg-sage" />
-        <div className="absolute bottom-20 right-20 w-24 h-24 rounded-full bg-terracotta" />
         <div className="absolute top-1/2 left-1/4 w-16 h-16 rounded-full bg-sage-light" />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+        <div className="flex items-center justify-center mb-8">
+          {/* Logo */}
+            <img 
+              src="/uploads/1.png" 
+              alt="Pura Essence Logo" 
+              className="h-48 w-auto"
+            />
+          </div>
         <div className="max-w-3xl mx-auto">
           {/* Badge */}
           <div className="">
@@ -22,8 +28,8 @@ const Hero = () => {
 
           {/* Main Heading */}
           <h1 className="bdscript-regular text-4xl md:text-6xl lg:text-7xl font-bold text-foreground mb-6 leading-tight">
-            Pure Essence
-            <span className="block text-sage">of You</span>
+            Essence
+            <span className="text-sage"> of  You</span>
           </h1>
 
           {/* Subtitle */}

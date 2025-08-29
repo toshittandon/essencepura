@@ -23,9 +23,9 @@ const Header = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center">
             <img 
-              src="/lovable-uploads/logotransparentlight.png" 
+              src="/uploads/1.png" 
               alt="Pura Essence Logo" 
-              className="h-20 w-auto"
+              className="h-16 w-auto"
             />
           </Link>
 
