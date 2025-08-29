@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useCart } from "@/contexts/CartContext";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const ProductCard = ({ product }) => {
   const { addToCart } = useCart();
@@ -20,8 +21,9 @@ const ProductCard = ({ product }) => {
   };
 
   return (
-    <Card className="group overflow-hidden border-0 shadow-soft hover:shadow-product transition-all duration-300 bg-card">
-      <div className="relative overflow-hidden">
+    <Link to={`/product/${product.id}`}>
+      <Card className="group overflow-hidden border-0 shadow-soft hover:shadow-product transition-all duration-300 bg-card">
+        <div className="relative overflow-hidden">
         {/* Product Image */}
         <div className="aspect-square bg-gradient-to-br from-warm-white to-cream p-4 overflow-hidden">
           <img
@@ -101,6 +103,7 @@ const ProductCard = ({ product }) => {
         </div>
       </CardContent>
     </Card>
+    </Link>
   );
 };
 

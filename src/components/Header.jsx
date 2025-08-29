@@ -3,10 +3,12 @@ import { Link } from "react-router-dom";
 import { ShoppingBag, Menu, X, Search, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
+import { useUser } from "@/contexts/UserContext";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { getTotalItems } = useCart();
+  const { isAuthenticated } = useUser();
 
   const navigation = [
     { name: "Home", href: "/" },
@@ -47,21 +49,25 @@ const Header = () => {
             <Button variant="ghost" size="icon" className="hidden sm:flex">
               <Search className="h-5 w-5" />
             </Button>
-            <Button variant="ghost" size="icon" className="hidden sm:flex">
-              <User className="h-5 w-5" />
-            </Button>
-            <Button 
-              variant="ghost" 
-              size="icon"
-              className="relative"
-            >
-              <ShoppingBag className="h-5 w-5" />
-              {getTotalItems() > 0 && (
-                <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs font-medium rounded-full h-5 w-5 flex items-center justify-center">
-                  {getTotalItems()}
-                </span>
-              )}
-            </Button>
+            <Link to={isAuthenticated ? "/profile" : "/login"}>
+              <Button variant="ghost" size="icon" className="hidden sm:flex">
+                <User className="h-5 w-5" />
+              </Button>
+            </Link>
+            <Link to="/cart">
+              <Button 
+                variant="ghost" 
+                size="icon"
+                className="relative"
+              >
+                <ShoppingBag className="h-5 w-5" />
+                {getTotalItems() > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs font-medium rounded-full h-5 w-5 flex items-center justify-center">
+                    {getTotalItems()}
+                  </span>
+                )}
+              </Button>
+            </Link>
 
             {/* Mobile menu button */}
             <Button
@@ -94,9 +100,11 @@ const Header = () => {
               <Button variant="ghost" size="icon">
                 <Search className="h-5 w-5" />
               </Button>
-              <Button variant="ghost" size="icon">
-                <User className="h-5 w-5" />
-              </Button>
+              <Link to={isAuthenticated ? "/profile" : "/login"}>
+                <Button variant="ghost" size="icon">
+                  <User className="h-5 w-5" />
+                </Button>
+              </Link>
             </div>
           </div>
         )}
