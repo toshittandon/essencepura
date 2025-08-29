@@ -12,7 +12,7 @@ const About = () => {
               Our Story
             </h1>
             <p className="text-lg text-muted-foreground leading-relaxed">
-              Founded on the belief that beauty should come from nature, Terra Botanica was born from a passion 
+              Founded on the belief that beauty should come from nature, Essence Pura was born from a passion 
               for creating skincare that's as pure as it is effective.
             </p>
           </div>

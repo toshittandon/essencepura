@@ -1,6 +1,6 @@
 # Appwrite Integration Setup Guide
 
-This guide will help you set up Appwrite for user authentication and product management in your Terra Botanica e-commerce application.
+This guide will help you set up Appwrite for user authentication and product management in your Essence Pura e-commerce application.
 
 ## 🚀 Quick Start
 

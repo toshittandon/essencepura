@@ -1,4 +1,4 @@
-# Terra Botanica E-commerce
+# Essence Pura E-commerce
 
 A modern e-commerce application built with React, featuring Stripe payment integration, user authentication, and a complete shopping experience.
 

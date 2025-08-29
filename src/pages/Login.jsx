@@ -94,8 +94,8 @@ const Login = () => {
               </CardTitle>
               <p className="text-muted-foreground">
                 {activeTab === "login" 
-                  ? "Sign in to your Terra Botanica account"
-                  : "Join Terra Botanica today"
+                  ? "Sign in to your Essence Pura account"
+                  : "Join Essence Pura today"
                 }
               </p>
             </CardHeader>
