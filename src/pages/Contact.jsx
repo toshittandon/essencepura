@@ -86,23 +86,14 @@ const Contact = () => {
 
             {/* Contact Info */}
             <div className="space-y-8">
-              <div>
-                <h2 className="font-serif text-2xl font-semibold text-foreground mb-6">
-                  Visit our studio
-                </h2>
-                <p className="text-muted-foreground mb-8">
-                  Experience our products in person at our flagship location in the heart of the botanical district.
-                </p>
-              </div>
-
               <div className="space-y-6">
                 <div className="flex items-start space-x-4">
                   <MapPin className="w-6 h-6 text-sage mt-1 flex-shrink-0" />
                   <div>
                     <h3 className="font-medium text-foreground mb-1">Address</h3>
                     <p className="text-muted-foreground">
-                      123 Botanical Avenue<br />
-                      Green District, California 90210
+                      Walther Rathenau Straße, 30<br />
+                      Magdeburg, Germany 39106
                     </p>
                   </div>
                 </div>
@@ -111,7 +102,7 @@ const Contact = () => {
                   <Phone className="w-6 h-6 text-sage mt-1 flex-shrink-0" />
                   <div>
                     <h3 className="font-medium text-foreground mb-1">Phone</h3>
-                    <p className="text-muted-foreground">+1 (555) 123-4567</p>
+                    <p className="text-muted-foreground">+49 (176) 31099639</p>
                   </div>
                 </div>
 
@@ -119,7 +110,7 @@ const Contact = () => {
                   <Mail className="w-6 h-6 text-sage mt-1 flex-shrink-0" />
                   <div>
                     <h3 className="font-medium text-foreground mb-1">Email</h3>
-                    <p className="text-muted-foreground">hello@terrabotanica.com</p>
+                    <p className="text-muted-foreground">info@essencepura.com</p>
                   </div>
                 </div>
 
@@ -128,9 +119,7 @@ const Contact = () => {
                   <div>
                     <h3 className="font-medium text-foreground mb-1">Hours</h3>
                     <div className="text-muted-foreground space-y-1">
-                      <p>Monday - Friday: 9AM - 7PM</p>
-                      <p>Saturday: 10AM - 6PM</p>
-                      <p>Sunday: 11AM - 5PM</p>
+                      <p>Monday - Friday: By Appointment</p>
                     </div>
                   </div>
                 </div>
@@ -148,7 +137,7 @@ const Contact = () => {
                   </div>
                   <div>
                     <p className="font-medium text-foreground">Shipping & returns?</p>
-                    <p className="text-muted-foreground">Free shipping over $50, 30-day return policy.</p>
+                    <p className="text-muted-foreground">Free shipping over €30, 14-day return policy.</p>
                   </div>
                 </div>
               </div>
