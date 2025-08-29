@@ -22,6 +22,7 @@ export const storage = new Storage(client);
 // Database and collection IDs
 export const DATABASE_ID = import.meta.env.VITE_APPWRITE_DATABASE_ID || '';
 export const PRODUCTS_COLLECTION_ID = import.meta.env.VITE_APPWRITE_PRODUCTS_COLLECTION_ID || '';
+export const NEWSLETTER_COLLECTION_ID = import.meta.env.VITE_APPWRITE_NEWSLETTER_COLLECTION_ID || '';
 export const STORAGE_BUCKET_ID = import.meta.env.VITE_APPWRITE_STORAGE_BUCKET_ID || '';
 
 // Authentication functions
@@ -48,6 +49,36 @@ export const authService = {
       return session;
     } catch (error) {
       console.error('Error logging in:', error);
+      throw error;
+    }
+  },
+
+  // OAuth login with Google
+  async loginWithGoogle() {
+    try {
+      // Redirect to Google OAuth
+      account.createOAuth2Session(
+        'google',
+        `${window.location.origin}/auth/success`, // Success redirect
+        `${window.location.origin}/auth/failure`  // Failure redirect
+      );
+    } catch (error) {
+      console.error('Error with Google OAuth:', error);
+      throw error;
+    }
+  },
+
+  // OAuth login with Apple
+  async loginWithApple() {
+    try {
+      // Redirect to Apple OAuth
+      account.createOAuth2Session(
+        'apple',
+        `${window.location.origin}/auth/success`, // Success redirect
+        `${window.location.origin}/auth/failure`  // Failure redirect
+      );
+    } catch (error) {
+      console.error('Error with Apple OAuth:', error);
       throw error;
     }
   },
@@ -272,6 +303,98 @@ export const utils = {
     }
     
     return true;
+  }
+};
+
+// Newsletter management functions
+export const newsletterService = {
+  // Subscribe to newsletter
+  async subscribe(email, name = '', source = 'website') {
+    try {
+      // Check if email already exists
+      const existing = await databases.listDocuments(
+        DATABASE_ID,
+        NEWSLETTER_COLLECTION_ID,
+        [Query.equal('email', email)]
+      );
+
+      if (existing.documents.length > 0) {
+        // Update existing subscription
+        return await databases.updateDocument(
+          DATABASE_ID,
+          NEWSLETTER_COLLECTION_ID,
+          existing.documents[0].$id,
+          {
+            name: name || existing.documents[0].name,
+            isActive: true,
+            source,
+            updatedAt: new Date().toISOString()
+          }
+        );
+      } else {
+        // Create new subscription
+        return await databases.createDocument(
+          DATABASE_ID,
+          NEWSLETTER_COLLECTION_ID,
+          ID.unique(),
+          {
+            email,
+            name,
+            isActive: true,
+            source,
+            subscribedAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          }
+        );
+      }
+    } catch (error) {
+      console.error('Error subscribing to newsletter:', error);
+      throw error;
+    }
+  },
+
+  // Unsubscribe from newsletter
+  async unsubscribe(email) {
+    try {
+      const existing = await databases.listDocuments(
+        DATABASE_ID,
+        NEWSLETTER_COLLECTION_ID,
+        [Query.equal('email', email)]
+      );
+
+      if (existing.documents.length > 0) {
+        return await databases.updateDocument(
+          DATABASE_ID,
+          NEWSLETTER_COLLECTION_ID,
+          existing.documents[0].$id,
+          {
+            isActive: false,
+            updatedAt: new Date().toISOString()
+          }
+        );
+      }
+    } catch (error) {
+      console.error('Error unsubscribing from newsletter:', error);
+      throw error;
+    }
+  },
+
+  // Get all newsletter subscribers (Admin only)
+  async getSubscribers() {
+    try {
+      const response = await databases.listDocuments(
+        DATABASE_ID,
+        NEWSLETTER_COLLECTION_ID,
+        [
+          Query.equal('isActive', true),
+          Query.orderDesc('subscribedAt')
+        ]
+      );
+      return response.documents;
+    } catch (error) {
+      console.error('Error fetching newsletter subscribers:', error);
+      throw error;
+    }
   }
 };
 

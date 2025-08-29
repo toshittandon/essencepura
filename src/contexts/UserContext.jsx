@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { authService, utils } from "@/services/appwrite";
+import { authService, utils, newsletterService } from "@/services/appwrite";
 import { toast } from "sonner";
 
 const UserContext = createContext(undefined);
@@ -46,7 +46,7 @@ export const UserProvider = ({ children }) => {
     }
   };
 
-  const signup = async (email, password, name) => {
+  const signup = async (email, password, name, subscribeToNewsletter = false) => {
     try {
       setIsLoading(true);
       await authService.createAccount(email, password, name);
@@ -65,6 +65,16 @@ export const UserProvider = ({ children }) => {
           }),
           isAdmin: utils.isAdmin(currentUser)
         });
+
+        // Subscribe to newsletter if requested
+        if (subscribeToNewsletter) {
+          try {
+            await newsletterService.subscribe(email, name, 'signup');
+          } catch (newsletterError) {
+            console.error('Newsletter subscription error:', newsletterError);
+            // Don't fail the signup if newsletter subscription fails
+          }
+        }
         
         toast.success("Account created successfully!");
         return currentUser;
@@ -78,7 +88,7 @@ export const UserProvider = ({ children }) => {
     }
   };
 
-  const login = async (email, password) => {
+  const login = async (email, password, subscribeToNewsletter = false) => {
     try {
       setIsLoading(true);
       await authService.login(email, password);
@@ -97,6 +107,16 @@ export const UserProvider = ({ children }) => {
           }),
           isAdmin: utils.isAdmin(currentUser)
         });
+
+        // Subscribe to newsletter if requested
+        if (subscribeToNewsletter) {
+          try {
+            await newsletterService.subscribe(currentUser.email, currentUser.name, 'login');
+          } catch (newsletterError) {
+            console.error('Newsletter subscription error:', newsletterError);
+            // Don't fail the login if newsletter subscription fails
+          }
+        }
         
         toast.success("Logged in successfully!");
         return currentUser;
@@ -104,6 +124,34 @@ export const UserProvider = ({ children }) => {
     } catch (error) {
       console.error('Login error:', error);
       toast.error(error.message || "Failed to log in");
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const loginWithGoogle = async () => {
+    try {
+      setIsLoading(true);
+      await authService.loginWithGoogle();
+      // OAuth will redirect, so we don't need to handle the response here
+    } catch (error) {
+      console.error('Google login error:', error);
+      toast.error("Failed to login with Google");
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const loginWithApple = async () => {
+    try {
+      setIsLoading(true);
+      await authService.loginWithApple();
+      // OAuth will redirect, so we don't need to handle the response here
+    } catch (error) {
+      console.error('Apple login error:', error);
+      toast.error("Failed to login with Apple");
       throw error;
     } finally {
       setIsLoading(false);
@@ -181,6 +229,8 @@ export const UserProvider = ({ children }) => {
         isAuthenticated,
         signup,
         login,
+        loginWithGoogle,
+        loginWithApple,
         logout,
         updateProfile,
         checkUserSession,

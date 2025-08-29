@@ -18,6 +18,8 @@ import ProductDetail from "./pages/ProductDetail";
 import Checkout from "./pages/Checkout";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import Login from "./pages/Login";
+import AuthSuccess from "./pages/AuthSuccess";
+import AuthFailure from "./pages/AuthFailure";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 
@@ -37,6 +39,8 @@ const App = () => (
                 <Route path="/shop" element={<Shop />} />
                 <Route path="/product/:id" element={<ProductDetail />} />
                 <Route path="/login" element={<Login />} />
+                <Route path="/auth/success" element={<AuthSuccess />} />
+                <Route path="/auth/failure" element={<AuthFailure />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/ingredients" element={<Ingredients />} />
                 <Route path="/contact" element={<Contact />} />

@@ -1,7 +1,19 @@
 import { Link } from "react-router-dom";
-import { Instagram, Facebook, Twitter, Mail, Sprout, Leaf, Heart, Recycle } from "lucide-react";
+import { Instagram, Facebook, Mail, Sprout, Leaf, Heart, Recycle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+
+// Custom TikTok Icon Component
+const TikTokIcon = ({ className }) => (
+  <svg
+    className={className}
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path d="M19.321 5.562a5.124 5.124 0 0 1-.443-.258 6.228 6.228 0 0 1-1.137-.966c-.849-.849-1.294-1.98-1.294-3.338h-3.239v14.19c0 1.308-1.065 2.372-2.372 2.372s-2.372-1.064-2.372-2.372c0-1.307 1.065-2.371 2.372-2.371.26 0 .509.042.744.12V9.756a6.131 6.131 0 0 0-.744-.046c-3.368 0-6.097 2.729-6.097 6.097S7.468 21.904 10.836 21.904s6.097-2.729 6.097-6.097V9.370a9.094 9.094 0 0 0 5.388 1.744V7.875a5.884 5.884 0 0 1-3-2.313z"/>
+  </svg>
+);
 
 const Footer = () => {
   return (
@@ -28,17 +40,38 @@ const Footer = () => {
                 Crafting organic self-care essentials that honor both your skin and the environment. 
               </p>
               <div className="flex space-x-3">
-                <Button variant="ghost" size="icon" className="text-sage hover:bg-sage hover:text-primary-foreground">
-                  <Instagram className="h-5 w-5" />
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="text-sage hover:bg-sage hover:text-primary-foreground"
+                  asChild
+                >
+                  <a href="https://www.instagram.com/essencepuraofficial/" target="_blank" rel="noopener noreferrer">
+                    <Instagram className="h-5 w-5" />
+                  </a>
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="text-sage hover:bg-sage hover:text-primary-foreground"
+                  asChild
+                >
+                  <a href="https://www.facebook.com/share/174U2sA5iX/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer">
+                    <Facebook className="h-5 w-5" />
+                  </a>
                 </Button>
                 <Button variant="ghost" size="icon" className="text-sage hover:bg-sage hover:text-primary-foreground">
-                  <Facebook className="h-5 w-5" />
+                  <TikTokIcon className="h-5 w-5" />
                 </Button>
-                <Button variant="ghost" size="icon" className="text-sage hover:bg-sage hover:text-primary-foreground">
-                  <Twitter className="h-5 w-5" />
-                </Button>
-                <Button variant="ghost" size="icon" className="text-sage hover:bg-sage hover:text-primary-foreground">
-                  <Mail className="h-5 w-5" />
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="text-sage hover:bg-sage hover:text-primary-foreground"
+                  asChild
+                >
+                  <Link to="/contact">
+                    <Mail className="h-5 w-5" />
+                  </Link>
                 </Button>
               </div>
             </div>
