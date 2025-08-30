@@ -88,7 +88,10 @@ export const authService = {
     try {
       return await account.get();
     } catch (error) {
-      console.error('Error getting current user:', error);
+      // Don't log 401 errors - they're expected when no user is logged in
+      if (error.code !== 401) {
+        console.error('Error getting current user:', error);
+      }
       return null;
     }
   },

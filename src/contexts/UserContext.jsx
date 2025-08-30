@@ -39,7 +39,10 @@ export const UserProvider = ({ children }) => {
         });
       }
     } catch (error) {
-      console.error('No active session:', error);
+      // Silently handle no active session - this is expected for guest users
+      if (error.code !== 401) {
+        console.error('Session check error:', error);
+      }
       setUser(null);
     } finally {
       setIsLoading(false);
