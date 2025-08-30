@@ -20,7 +20,6 @@ import PaymentSuccess from "./pages/PaymentSuccess";
 import Login from "./pages/Login";
 import AuthSuccess from "./pages/AuthSuccess";
 import AuthFailure from "./pages/AuthFailure";
-import Admin from "./pages/Admin";
 import NewsletterDebug from "./pages/NewsletterDebug";
 import NotFound from "./pages/NotFound";
 
@@ -68,12 +67,7 @@ const App = () => (
                   </ProtectedRoute>
                 } />
                 
-                {/* Admin Routes - Require Admin Access */}
-                <Route path="/admin" element={
-                  <ProtectedRoute requireAdmin={true}>
-                    <Admin />
-                  </ProtectedRoute>
-                } />
+
                 
                 {/* Debug Routes */}
                 <Route path="/newsletter-debug" element={<NewsletterDebug />} />
