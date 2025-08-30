@@ -8,10 +8,14 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useUser } from "@/contexts/UserContext";
+import SEOHead from "@/components/SEOHead";
+import { getSEOData } from "@/utils/seo";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 const Login = () => {
+  const seoData = getSEOData('login');
+  
   // Login form state
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
@@ -87,6 +91,7 @@ const Login = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead {...seoData} />
       <Header />
       
       <main className="py-16">

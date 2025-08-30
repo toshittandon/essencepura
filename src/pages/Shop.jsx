@@ -1,10 +1,15 @@
 import Header from "@/components/Header";
 import ProductGrid from "@/components/ProductGrid";
 import Footer from "@/components/Footer";
+import SEOHead from "@/components/SEOHead";
+import { getSEOData } from "@/utils/seo";
 
 const Shop = () => {
+  const seoData = getSEOData('shop');
+
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead {...seoData} />
       <Header />
       <main>
         <div className="py-16">

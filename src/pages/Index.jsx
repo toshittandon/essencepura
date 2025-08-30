@@ -2,11 +2,16 @@ import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import ProductGrid from "@/components/ProductGrid";
 import Footer from "@/components/Footer";
+import SEOHead from "@/components/SEOHead";
+import { getSEOData } from "@/utils/seo";
 import { Leaf, Heart, Recycle, Sprout } from "lucide-react";
 
 const Index = () => {
+  const seoData = getSEOData('home');
+
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead {...seoData} />
       <Header />
       <main>
         <Hero />

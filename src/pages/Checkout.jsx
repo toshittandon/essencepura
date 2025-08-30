@@ -13,6 +13,8 @@ import { Link, Navigate } from "react-router-dom";
 import { AlertTriangle, Loader2 } from "lucide-react";
 import stripePromise from "@/lib/stripe";
 import Header from "@/components/Header";
+import SEOHead from "@/components/SEOHead";
+import { getSEOData } from "@/utils/seo";
 import Footer from "@/components/Footer";
 import CheckoutForm from "@/components/CheckoutForm";
 import { toast } from "sonner";
@@ -20,6 +22,7 @@ import { toast } from "sonner";
 const Checkout = () => {
   const { items, getTotalPrice, getTotalItems, updateQuantity, removeFromCart } = useCart();
   const { isAuthenticated } = useUser();
+  const seoData = getSEOData('checkout');
   const { getProduct } = useProducts();
   const [clientSecret, setClientSecret] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -210,6 +213,7 @@ const Checkout = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead {...seoData} />
       <Header />
       
       <main className="py-16">

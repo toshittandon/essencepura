@@ -1,14 +1,35 @@
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-User-agent: Twitterbot
-Allow: /
-
-User-agent: facebookexternalhit
-Allow: /
+# Robots.txt for Essence Pura
+# This file tells search engines which pages to crawl and which to avoid
 
 User-agent: *
+
+# Allow indexing of main public pages
 Allow: /
+Allow: /shop
+Allow: /about
+Allow: /ingredients
+Allow: /contact
+Allow: /product/
+
+# Block sensitive and private pages
+Disallow: /profile
+Disallow: /cart
+Disallow: /checkout
+Disallow: /login
+Disallow: /auth/
+Disallow: /payment-success
+Disallow: /newsletter-debug
+
+# Block admin and debug routes
+Disallow: /admin
+Disallow: /*debug*
+
+# Block API endpoints if any
+Disallow: /api/
+
+# Allow access to important files
+Allow: /sitemap.xml
+Allow: /robots.txt
+
+# Sitemap location
+Sitemap: https://essencepura.com/sitemap.xml

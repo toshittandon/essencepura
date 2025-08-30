@@ -10,6 +10,8 @@ import { useProducts } from "@/contexts/ProductContext";
 import { useUser } from "@/contexts/UserContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import SEOHead from "@/components/SEOHead";
+import { getProductSEOData, getProductStructuredData } from "@/utils/seo";
 import { toast } from "sonner";
 
 const ProductDetail = () => {
@@ -164,8 +166,13 @@ const ProductDetail = () => {
   // Check if product is out of stock
   const isOutOfStock = product.stock !== undefined && product.stock <= 0;
 
+  // Generate SEO data for the product
+  const seoData = getProductSEOData(product);
+  const structuredData = getProductStructuredData(product);
+
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead {...seoData} structuredData={structuredData} />
       <Header />
       
       <main className="py-8">

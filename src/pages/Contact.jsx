@@ -1,6 +1,8 @@
 import { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import SEOHead from "@/components/SEOHead";
+import { getSEOData } from "@/utils/seo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -19,6 +21,8 @@ const TikTokIcon = ({ className }) => (
 );
 
 const Contact = () => {
+  const seoData = getSEOData('contact');
+  
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -76,6 +80,7 @@ const Contact = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead {...seoData} />
       <Header />
       <main className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

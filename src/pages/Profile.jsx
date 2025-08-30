@@ -11,11 +11,14 @@ import { useUser } from "@/contexts/UserContext";
 import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import SEOHead from "@/components/SEOHead";
+import { getSEOData } from "@/utils/seo";
 import { toast } from "sonner";
 
 const Profile = () => {
   const { user, logout, updateProfile, isLoading } = useUser();
   const navigate = useNavigate();
+  const seoData = getSEOData('profile');
   
   // Edit profile state
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -143,6 +146,7 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead {...seoData} />
       <Header />
       
       <main className="py-16">

@@ -5,6 +5,8 @@ import { useCart } from "@/contexts/CartContext";
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import SEOHead from "@/components/SEOHead";
+import { getSEOData } from "@/utils/seo";
 
 // Cart Item Component
 const CartItem = ({ item }) => {
@@ -86,10 +88,12 @@ const CartItem = ({ item }) => {
 
 const Cart = () => {
   const { items, getTotalPrice, getTotalItems } = useCart();
+  const seoData = getSEOData('cart');
 
   if (items.length === 0) {
     return (
       <div className="min-h-screen bg-background">
+        <SEOHead {...seoData} />
         <Header />
         
         <main className="py-16">
@@ -118,6 +122,7 @@ const Cart = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead {...seoData} />
       <Header />
       
       <main className="py-16">
