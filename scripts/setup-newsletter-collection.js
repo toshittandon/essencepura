@@ -1,4 +1,4 @@
-import { Client, Databases, ID } from 'appwrite';
+import { Client, Databases, ID } from 'node-appwrite';
 import dotenv from 'dotenv';
 
 // Load environment variables
@@ -22,13 +22,7 @@ async function createNewsletterCollection() {
         const collection = await databases.createCollection(
             DATABASE_ID,
             ID.unique(),
-            'newsletter_subscribers',
-            [
-                // Read permissions for admin users
-                'read("any")',
-                // Write permissions for any authenticated user (for self-subscription)
-                'write("any")'
-            ]
+            'newsletter_subscribers'
         );
 
         console.log('Newsletter collection created:', collection.$id);

@@ -266,8 +266,11 @@ const Contact = () => {
                     variant="ghost"
                     size="icon"
                     className="text-sage hover:bg-sage hover:text-primary-foreground h-12 w-12"
+                    asChild
                   >
-                    <TikTokIcon className="h-7 w-7" />
+                    <a href="https://www.tiktok.com/@essencepuraofficial?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener noreferrer">
+                      <TikTokIcon className="h-7 w-7" />
+                    </a>
                   </Button>
                 </div>
               </div>

@@ -21,6 +21,7 @@ import Login from "./pages/Login";
 import AuthSuccess from "./pages/AuthSuccess";
 import AuthFailure from "./pages/AuthFailure";
 import Admin from "./pages/Admin";
+import NewsletterDebug from "./pages/NewsletterDebug";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -73,6 +74,9 @@ const App = () => (
                     <Admin />
                   </ProtectedRoute>
                 } />
+                
+                {/* Debug Routes */}
+                <Route path="/newsletter-debug" element={<NewsletterDebug />} />
                 
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />

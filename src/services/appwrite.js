@@ -320,31 +320,33 @@ export const newsletterService = {
 
       if (existing.documents.length > 0) {
         // Update existing subscription
+        const updateData = {
+          name: name || existing.documents[0].name,
+          source,
+          updatedAt: new Date().toISOString()
+        };
+        
         return await databases.updateDocument(
           DATABASE_ID,
           NEWSLETTER_COLLECTION_ID,
           existing.documents[0].$id,
-          {
-            name: name || existing.documents[0].name,
-            isActive: true,
-            source,
-            updatedAt: new Date().toISOString()
-          }
+          updateData
         );
       } else {
         // Create new subscription
+        const createData = {
+          email,
+          name,
+          source,
+          subscribedAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        };
+        
         return await databases.createDocument(
           DATABASE_ID,
           NEWSLETTER_COLLECTION_ID,
           ID.unique(),
-          {
-            email,
-            name,
-            isActive: true,
-            source,
-            subscribedAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          }
+          createData
         );
       }
     } catch (error) {
@@ -353,7 +355,7 @@ export const newsletterService = {
     }
   },
 
-  // Unsubscribe from newsletter
+  // Unsubscribe from newsletter (delete the document since we don't have isActive)
   async unsubscribe(email) {
     try {
       const existing = await databases.listDocuments(
@@ -363,14 +365,11 @@ export const newsletterService = {
       );
 
       if (existing.documents.length > 0) {
-        return await databases.updateDocument(
+        // Delete the document since we don't have isActive attribute
+        return await databases.deleteDocument(
           DATABASE_ID,
           NEWSLETTER_COLLECTION_ID,
-          existing.documents[0].$id,
-          {
-            isActive: false,
-            updatedAt: new Date().toISOString()
-          }
+          existing.documents[0].$id
         );
       }
     } catch (error) {
@@ -385,10 +384,7 @@ export const newsletterService = {
       const response = await databases.listDocuments(
         DATABASE_ID,
         NEWSLETTER_COLLECTION_ID,
-        [
-          Query.equal('isActive', true),
-          Query.orderDesc('subscribedAt')
-        ]
+        [Query.orderDesc('subscribedAt')]
       );
       return response.documents;
     } catch (error) {

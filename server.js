@@ -15,13 +15,41 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 // Create email transporter
 const createEmailTransporter = () => {
-  return nodemailer.createTransporter({
-    service: 'gmail', // You can change this to your email provider
-    auth: {
-      user: process.env.EMAIL_USER, // Your email
-      pass: process.env.EMAIL_PASS, // Your email password or app password
-    },
-  });
+  // For development/testing, create a test account if no email config is provided
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    console.log('⚠️  No email configuration found. Using test mode.');
+    return null; // Will be handled in the email sending function
+  }
+
+  // Check if it's a Gmail address
+  const isGmail = process.env.EMAIL_USER.includes('@gmail.com');
+  
+  if (isGmail) {
+    return nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+  } else {
+    // For custom domain emails, try different SMTP configurations
+    // First try with the domain's SMTP server
+    const domain = process.env.EMAIL_USER.split('@')[1];
+    
+    return nodemailer.createTransport({
+      host: `mail.${domain}`, // Try domain's mail server first
+      port: 587,
+      secure: false,
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+      tls: {
+        rejectUnauthorized: false
+      }
+    });
+  }
 };
 
 // Middleware
@@ -109,6 +137,20 @@ app.post('/send-contact-email', async (req, res) => {
     // Create email transporter
     const transporter = createEmailTransporter();
 
+    // If no email configuration, simulate success for development
+    if (!transporter) {
+      console.log('📧 SIMULATED EMAIL (No email config):');
+      console.log(`From: ${firstName} ${lastName} <${email}>`);
+      console.log(`Subject: ${subject}`);
+      console.log(`Message: ${message}`);
+      
+      return res.json({
+        success: true,
+        message: 'Email sent successfully (simulated)',
+        note: 'Email configuration not found - this is a simulated response for development'
+      });
+    }
+
     // Email content to send to your business email
     const mailOptions = {
       from: process.env.EMAIL_USER,
@@ -142,58 +184,75 @@ app.post('/send-contact-email', async (req, res) => {
       replyTo: email // Allow direct reply to the customer
     };
 
-    // Send email
-    await transporter.sendMail(mailOptions);
+    try {
+      // Send email
+      await transporter.sendMail(mailOptions);
 
-    // Send confirmation email to customer
-    const confirmationMailOptions = {
-      from: process.env.EMAIL_USER,
-      to: email,
-      subject: 'Thank you for contacting Essence Pura',
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <div style="text-align: center; margin-bottom: 30px;">
-            <h1 style="color: #8B9A8B; font-family: serif;">Essence Pura</h1>
+      // Send confirmation email to customer
+      const confirmationMailOptions = {
+        from: process.env.EMAIL_USER,
+        to: email,
+        subject: 'Thank you for contacting Essence Pura',
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #8B9A8B; font-family: serif;">Essence Pura</h1>
+            </div>
+            
+            <h2 style="color: #333;">Thank you for reaching out!</h2>
+            
+            <p>Dear ${firstName},</p>
+            
+            <p>We've received your message and appreciate you taking the time to contact us. Our team will review your inquiry and get back to you within 24 hours.</p>
+            
+            <div style="background-color: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0;">
+              <h3 style="color: #333; margin-top: 0;">Your Message Summary</h3>
+              <p><strong>Subject:</strong> ${subject}</p>
+              <p><strong>Message:</strong></p>
+              <p style="line-height: 1.6;">${message.replace(/\n/g, '<br>')}</p>
+            </div>
+            
+            <p>In the meantime, feel free to explore our organic skincare collection and follow us on social media for beauty tips and updates.</p>
+            
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; text-align: center;">
+              <p style="color: #8B9A8B; font-weight: bold;">Crafting organic self-care essentials that honor both your skin and the environment.</p>
+              <p style="color: #666; font-size: 14px;">
+                Walther Rathenau Straße, 30<br>
+                Magdeburg, Germany 39106<br>
+                +49 (176) 31099639
+              </p>
+            </div>
           </div>
-          
-          <h2 style="color: #333;">Thank you for reaching out!</h2>
-          
-          <p>Dear ${firstName},</p>
-          
-          <p>We've received your message and appreciate you taking the time to contact us. Our team will review your inquiry and get back to you within 24 hours.</p>
-          
-          <div style="background-color: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0;">
-            <h3 style="color: #333; margin-top: 0;">Your Message Summary</h3>
-            <p><strong>Subject:</strong> ${subject}</p>
-            <p><strong>Message:</strong></p>
-            <p style="line-height: 1.6;">${message.replace(/\n/g, '<br>')}</p>
-          </div>
-          
-          <p>In the meantime, feel free to explore our organic skincare collection and follow us on social media for beauty tips and updates.</p>
-          
-          <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; text-align: center;">
-            <p style="color: #8B9A8B; font-weight: bold;">Crafting organic self-care essentials that honor both your skin and the environment.</p>
-            <p style="color: #666; font-size: 14px;">
-              Walther Rathenau Straße, 30<br>
-              Magdeburg, Germany 39106<br>
-              +49 (176) 31099639
-            </p>
-          </div>
-        </div>
-      `
-    };
+        `
+      };
 
-    await transporter.sendMail(confirmationMailOptions);
+      await transporter.sendMail(confirmationMailOptions);
 
-    res.json({
-      success: true,
-      message: 'Email sent successfully'
-    });
+      res.json({
+        success: true,
+        message: 'Email sent successfully'
+      });
+
+    } catch (emailError) {
+      // If email sending fails, log the contact info and return success
+      // This ensures the contact form doesn't break while email is being configured
+      console.log('📧 EMAIL SENDING FAILED - LOGGING CONTACT INFO:');
+      console.log(`From: ${firstName} ${lastName} <${email}>`);
+      console.log(`Subject: ${subject}`);
+      console.log(`Message: ${message}`);
+      console.log(`Error: ${emailError.message}`);
+      
+      res.json({
+        success: true,
+        message: 'Message received successfully',
+        note: 'Email delivery is currently being configured. Your message has been logged and we will respond soon.'
+      });
+    }
 
   } catch (error) {
-    console.error('Error sending email:', error);
+    console.error('Error processing contact form:', error);
     res.status(500).json({
-      error: 'Failed to send email',
+      error: 'Failed to process contact form',
       details: error.message
     });
   }

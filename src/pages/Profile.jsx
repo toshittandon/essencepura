@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { User, Package, LogOut, Edit, Mail, Calendar, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -27,29 +27,36 @@ const Profile = () => {
     confirmPassword: ""
   });
 
-  // Mock order history - in real app this would come from API
-  const [orders] = useState([
-    {
-      id: "ORD-001",
-      date: "2024-08-15",
-      status: "Delivered",
-      total: 145.00,
-      items: [
-        { name: "Botanical Face Serum", quantity: 1, price: 72 },
-        { name: "Nourishing Night Cream", quantity: 1, price: 65 }
-      ]
-    },
-    {
-      id: "ORD-002", 
-      date: "2024-07-28",
-      status: "Delivered",
-      total: 90.00,
-      items: [
-        { name: "Gentle Cleansing Oil", quantity: 1, price: 48 },
-        { name: "Purifying Clay Mask", quantity: 1, price: 42 }
-      ]
-    }
-  ]);
+  // Real order history - fetched from backend
+  const [orders, setOrders] = useState([]);
+  const [ordersLoading, setOrdersLoading] = useState(true);
+
+  // Fetch user's real orders
+  useEffect(() => {
+    const fetchOrders = async () => {
+      if (!user?.id) {
+        setOrdersLoading(false);
+        return;
+      }
+
+      try {
+        // TODO: Replace with your actual API endpoint for fetching user orders
+        // const response = await fetch(`${import.meta.env.VITE_API_URL}/api/orders/${user.id}`);
+        // const userOrders = await response.json();
+        // setOrders(userOrders);
+        
+        // For now, show empty orders until real API is implemented
+        setOrders([]);
+      } catch (error) {
+        console.error('Error fetching orders:', error);
+        setOrders([]);
+      } finally {
+        setOrdersLoading(false);
+      }
+    };
+
+    fetchOrders();
+  }, [user?.id]);
 
   const handleLogout = async () => {
     try {
@@ -305,37 +312,58 @@ const Profile = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-6">
-                  {orders.map((order) => (
-                    <div key={order.id} className="border rounded-lg p-4">
-                      <div className="flex justify-between items-start mb-4">
-                        <div>
-                          <h4 className="font-semibold">Order {order.id}</h4>
-                          <p className="text-sm text-muted-foreground">
-                            {new Date(order.date).toLocaleDateString()}
-                          </p>
-                        </div>
-                        <div className="text-right">
-                          <Badge className={getStatusColor(order.status)}>
-                            {order.status}
-                          </Badge>
-                          <p className="font-semibold mt-1">
-                            ${order.total.toFixed(2)}
-                          </p>
-                        </div>
-                      </div>
-                      
-                      <div className="space-y-2">
-                        {order.items.map((item, index) => (
-                          <div key={index} className="flex justify-between text-sm">
-                            <span>{item.name} × {item.quantity}</span>
-                            <span>${item.price.toFixed(2)}</span>
+                {ordersLoading ? (
+                  <div className="flex items-center justify-center py-8">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-sage"></div>
+                    <span className="ml-2 text-muted-foreground">Loading orders...</span>
+                  </div>
+                ) : orders.length === 0 ? (
+                  <div className="text-center py-8">
+                    <Package className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                    <h3 className="font-semibold text-lg mb-2">No orders yet</h3>
+                    <p className="text-muted-foreground mb-4">
+                      You haven't placed any orders yet. Start shopping to see your order history here.
+                    </p>
+                    <Button 
+                      onClick={() => navigate("/products")}
+                      className="bg-sage hover:bg-sage-dark"
+                    >
+                      Browse Products
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="space-y-6">
+                    {orders.map((order) => (
+                      <div key={order.id} className="border rounded-lg p-4">
+                        <div className="flex justify-between items-start mb-4">
+                          <div>
+                            <h4 className="font-semibold">Order {order.id}</h4>
+                            <p className="text-sm text-muted-foreground">
+                              {new Date(order.date).toLocaleDateString()}
+                            </p>
                           </div>
-                        ))}
+                          <div className="text-right">
+                            <Badge className={getStatusColor(order.status)}>
+                              {order.status}
+                            </Badge>
+                            <p className="font-semibold mt-1">
+                              ${order.total.toFixed(2)}
+                            </p>
+                          </div>
+                        </div>
+                        
+                        <div className="space-y-2">
+                          {order.items.map((item, index) => (
+                            <div key={index} className="flex justify-between text-sm">
+                              <span>{item.name} × {item.quantity}</span>
+                              <span>${item.price.toFixed(2)}</span>
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                )}
               </CardContent>
             </Card>
           </div>

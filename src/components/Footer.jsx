@@ -1,7 +1,10 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Instagram, Facebook, Mail, Sprout, Leaf, Heart, Recycle } from "lucide-react";
+import { Instagram, Facebook, Mail, Sprout, Leaf, Heart, Recycle, CheckCircle, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { newsletterService } from "@/services/appwrite";
+import { toast } from "sonner";
 
 // Custom TikTok Icon Component
 const TikTokIcon = ({ className }) => (
@@ -16,6 +19,42 @@ const TikTokIcon = ({ className }) => (
 );
 
 const Footer = () => {
+  const [email, setEmail] = useState("");
+  const [isSubscribing, setIsSubscribing] = useState(false);
+  const [subscriptionStatus, setSubscriptionStatus] = useState(null); // 'success', 'error', or null
+
+  const handleNewsletterSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!email) {
+      toast.error("Please enter your email address");
+      return;
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+
+    setIsSubscribing(true);
+    setSubscriptionStatus(null);
+
+    try {
+      await newsletterService.subscribe(email, '', 'footer');
+      setSubscriptionStatus('success');
+      setEmail("");
+      toast.success("Successfully subscribed to our newsletter!");
+    } catch (error) {
+      console.error('Newsletter subscription error:', error);
+      setSubscriptionStatus('error');
+      toast.error("Failed to subscribe. Please try again.");
+    } finally {
+      setIsSubscribing(false);
+    }
+  };
+
   return (
     <footer className="bg-sage/5 border-t border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -60,8 +99,15 @@ const Footer = () => {
                     <Facebook className="h-5 w-5" />
                   </a>
                 </Button>
-                <Button variant="ghost" size="icon" className="text-sage hover:bg-sage hover:text-primary-foreground">
-                  <TikTokIcon className="h-5 w-5" />
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="text-sage hover:bg-sage hover:text-primary-foreground"
+                  asChild
+                >
+                  <a href="https://www.tiktok.com/@essencepuraofficial?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener noreferrer">
+                    <TikTokIcon className="h-5 w-5" />
+                  </a>
                 </Button>
                 <Button 
                   variant="ghost" 
@@ -133,16 +179,42 @@ const Footer = () => {
               <p className="text-muted-foreground mb-4">
                 Subscribe for beauty tips, new product launches, and exclusive offers.
               </p>
-              <div className="space-y-3">
+              
+              <form onSubmit={handleNewsletterSubmit} className="space-y-3">
                 <Input
                   type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email"
                   className="bg-background border-sage/30 focus:border-sage"
+                  disabled={isSubscribing}
+                  required
                 />
-                <Button className="w-full bg-sage hover:bg-sage-dark text-primary-foreground">
-                  Subscribe
+                
+                {/* Status Messages */}
+                {subscriptionStatus === 'success' && (
+                  <div className="flex items-center space-x-2 text-green-600 text-sm">
+                    <CheckCircle className="h-4 w-4" />
+                    <span>Successfully subscribed!</span>
+                  </div>
+                )}
+
+                {subscriptionStatus === 'error' && (
+                  <div className="flex items-center space-x-2 text-red-600 text-sm">
+                    <AlertCircle className="h-4 w-4" />
+                    <span>Subscription failed. Please try again.</span>
+                  </div>
+                )}
+                
+                <Button 
+                  type="submit"
+                  className="w-full bg-sage hover:bg-sage-dark text-primary-foreground"
+                  disabled={isSubscribing}
+                >
+                  {isSubscribing ? "Subscribing..." : "Subscribe"}
                 </Button>
-              </div>
+              </form>
+              
               <p className="text-xs text-muted-foreground mt-3">
                 By subscribing, you agree to our Privacy Policy and consent to receive updates.
               </p>
