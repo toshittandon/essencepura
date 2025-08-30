@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import ProductGrid from "@/components/ProductGrid";
+import ShopQuizBanner from "@/components/ShopQuizBanner";
 import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
 import { getSEOData } from "@/utils/seo";
@@ -22,6 +23,12 @@ const Shop = () => {
             </p>
           </div>
         </div>
+        
+        {/* Quiz Banner */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <ShopQuizBanner />
+        </div>
+        
         <ProductGrid />
       </main>
       <Footer />

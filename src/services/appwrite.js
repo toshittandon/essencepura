@@ -23,6 +23,7 @@ export const storage = new Storage(client);
 export const DATABASE_ID = import.meta.env.VITE_APPWRITE_DATABASE_ID || '';
 export const PRODUCTS_COLLECTION_ID = import.meta.env.VITE_APPWRITE_PRODUCTS_COLLECTION_ID || '';
 export const NEWSLETTER_COLLECTION_ID = import.meta.env.VITE_APPWRITE_NEWSLETTER_COLLECTION_ID || '';
+export const ORDERS_COLLECTION_ID = import.meta.env.VITE_APPWRITE_ORDERS_COLLECTION_ID || '';
 export const STORAGE_BUCKET_ID = import.meta.env.VITE_APPWRITE_STORAGE_BUCKET_ID || '';
 
 // Authentication functions
@@ -392,6 +393,137 @@ export const newsletterService = {
       return response.documents;
     } catch (error) {
       console.error('Error fetching newsletter subscribers:', error);
+      throw error;
+    }
+  }
+};
+
+// Order management functions
+export const orderService = {
+  // Create new order
+  async createOrder(orderData) {
+    try {
+      const order = {
+        userId: orderData.userId,
+        items: JSON.stringify(orderData.items), // Store as JSON string
+        subtotal: orderData.subtotal,
+        tax: orderData.tax,
+        total: orderData.total,
+        shippingAddress: JSON.stringify(orderData.shippingAddress), // Store as JSON string
+        paymentIntentId: orderData.paymentIntentId,
+        status: orderData.status || 'pending',
+        customPackagingName: orderData.customPackagingName || '', // New field for name customization
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+
+      return await databases.createDocument(
+        DATABASE_ID,
+        ORDERS_COLLECTION_ID,
+        ID.unique(),
+        order
+      );
+    } catch (error) {
+      console.error('Error creating order:', error);
+      throw error;
+    }
+  },
+
+  // Get order by ID
+  async getOrder(orderId) {
+    try {
+      const order = await databases.getDocument(
+        DATABASE_ID,
+        ORDERS_COLLECTION_ID,
+        orderId
+      );
+      
+      // Parse JSON fields
+      if (order.items) {
+        order.items = JSON.parse(order.items);
+      }
+      if (order.shippingAddress) {
+        order.shippingAddress = JSON.parse(order.shippingAddress);
+      }
+      
+      return order;
+    } catch (error) {
+      console.error('Error fetching order:', error);
+      throw error;
+    }
+  },
+
+  // Get orders by user ID
+  async getUserOrders(userId) {
+    try {
+      const response = await databases.listDocuments(
+        DATABASE_ID,
+        ORDERS_COLLECTION_ID,
+        [
+          Query.equal('userId', userId),
+          Query.orderDesc('$createdAt')
+        ]
+      );
+      
+      // Parse JSON fields for each order
+      const orders = response.documents.map(order => {
+        if (order.items) {
+          order.items = JSON.parse(order.items);
+        }
+        if (order.shippingAddress) {
+          order.shippingAddress = JSON.parse(order.shippingAddress);
+        }
+        return order;
+      });
+      
+      return orders;
+    } catch (error) {
+      console.error('Error fetching user orders:', error);
+      throw error;
+    }
+  },
+
+  // Update order status
+  async updateOrderStatus(orderId, status) {
+    try {
+      return await databases.updateDocument(
+        DATABASE_ID,
+        ORDERS_COLLECTION_ID,
+        orderId,
+        {
+          status,
+          updatedAt: new Date().toISOString()
+        }
+      );
+    } catch (error) {
+      console.error('Error updating order status:', error);
+      throw error;
+    }
+  },
+
+  // Get all orders (Admin only)
+  async getAllOrders() {
+    try {
+      const response = await databases.listDocuments(
+        DATABASE_ID,
+        ORDERS_COLLECTION_ID,
+        [Query.orderDesc('$createdAt')]
+      );
+      
+      // Parse JSON fields for each order
+      const orders = response.documents.map(order => {
+        if (order.items) {
+          order.items = JSON.parse(order.items);
+        }
+        if (order.shippingAddress) {
+          order.shippingAddress = JSON.parse(order.shippingAddress);
+        }
+        return order;
+      });
+      
+      return orders;
+    } catch (error) {
+      console.error('Error fetching all orders:', error);
       throw error;
     }
   }

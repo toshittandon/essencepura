@@ -6,12 +6,16 @@ import {
 } from "@stripe/react-stripe-js";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
+import { useUser } from "@/contexts/UserContext";
 import { useNavigate } from "react-router-dom";
+import { orderService } from "@/services/appwrite";
+import { toast } from "sonner";
 
-const CheckoutForm = () => {
+const CheckoutForm = ({ shippingAddress }) => {
   const stripe = useStripe();
   const elements = useElements();
-  const { clearCart } = useCart();
+  const { items, getTotalPrice, customPackagingName, clearCart } = useCart();
+  const { user } = useUser();
   const navigate = useNavigate();
 
   const [message, setMessage] = useState(null);
@@ -27,29 +31,63 @@ const CheckoutForm = () => {
 
     setIsLoading(true);
 
-    const { error } = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        // Make sure to change this to your payment completion page
-        return_url: `${window.location.origin}/payment-success`,
-      },
-    });
+    try {
+      const { error, paymentIntent } = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          return_url: `${window.location.origin}/payment-success`,
+        },
+        redirect: "if_required"
+      });
 
-    // This point will only be reached if there is an immediate error when
-    // confirming the payment. Otherwise, your customer will be redirected to
-    // your `return_url`. For some payment methods like iDEAL, your customer will
-    // be redirected to an intermediate site first to authorize the payment, then
-    // redirected to the `return_url`.
-    if (error) {
-      if (error.type === "card_error" || error.type === "validation_error") {
-        setMessage(error.message);
-      } else {
-        setMessage("An unexpected error occurred.");
+      if (error) {
+        if (error.type === "card_error" || error.type === "validation_error") {
+          setMessage(error.message);
+        } else {
+          setMessage("An unexpected error occurred.");
+        }
+      } else if (paymentIntent && paymentIntent.status === "succeeded") {
+        // Payment succeeded, create order in Appwrite
+        try {
+          const subtotal = getTotalPrice();
+          const tax = subtotal * 0.08;
+          const total = subtotal + tax;
+
+          const orderData = {
+            userId: user.$id,
+            items: items.map(item => ({
+              id: item.id,
+              name: item.name,
+              price: item.price,
+              quantity: item.quantity,
+              isBundle: item.isBundle || false
+            })),
+            subtotal: subtotal,
+            tax: tax,
+            total: total,
+            shippingAddress: shippingAddress || {},
+            paymentIntentId: paymentIntent.id,
+            status: 'completed',
+            customPackagingName: customPackagingName.trim() || null
+          };
+
+          await orderService.createOrder(orderData);
+          
+          // Clear cart and redirect
+          clearCart();
+          toast.success("Order placed successfully!");
+          navigate("/payment-success");
+          
+        } catch (orderError) {
+          console.error("Error creating order:", orderError);
+          toast.error("Payment succeeded but order creation failed. Please contact support.");
+          // Still redirect to success page since payment went through
+          navigate("/payment-success");
+        }
       }
-    } else {
-      // Payment succeeded
-      clearCart();
-      navigate("/payment-success");
+    } catch (error) {
+      console.error("Payment error:", error);
+      setMessage("An unexpected error occurred during payment.");
     }
 
     setIsLoading(false);

@@ -50,7 +50,11 @@ const Header = () => {
               <Link
                 key={item.name}
                 to={item.href}
-                className="text-foreground hover:text-primary transition-colors duration-200 font-medium"
+                className={`transition-colors duration-200 font-medium ${
+                  item.highlight 
+                    ? "text-emerald-600 hover:text-emerald-700 font-semibold" 
+                    : "text-foreground hover:text-primary"
+                }`}
               >
                 {item.name}
               </Link>

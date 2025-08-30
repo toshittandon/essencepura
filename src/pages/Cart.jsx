@@ -1,6 +1,8 @@
-import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
+import { Minus, Plus, Trash2, ShoppingBag, Gift } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { useCart } from "@/contexts/CartContext";
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
@@ -87,7 +89,7 @@ const CartItem = ({ item }) => {
 };
 
 const Cart = () => {
-  const { items, getTotalPrice, getTotalItems } = useCart();
+  const { items, getTotalPrice, getTotalItems, customPackagingName, setCustomPackagingName, getBundleDiscount } = useCart();
   const seoData = getSEOData('cart');
 
   if (items.length === 0) {
@@ -153,9 +155,40 @@ const Cart = () => {
                     Order Summary
                   </h3>
                   
+                  {/* Custom Packaging Name */}
+                  <div className="mb-6 p-4 bg-sage/5 rounded-lg border border-sage/20">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Gift className="w-4 h-4 text-sage" />
+                      <Label htmlFor="customName" className="font-medium text-foreground">
+                        Personalize Your Package
+                      </Label>
+                    </div>
+                    <Input
+                      id="customName"
+                      placeholder="Enter name for packaging (optional)"
+                      value={customPackagingName}
+                      onChange={(e) => setCustomPackagingName(e.target.value)}
+                      maxLength={30}
+                      className="border-sage/30 focus:border-sage"
+                    />
+                    <p className="text-xs text-muted-foreground mt-2">
+                      Add a personal touch to your order packaging
+                    </p>
+                  </div>
+                  
                   <div className="space-y-4 mb-6">
                     <div className="flex justify-between">
                       <span>Subtotal ({getTotalItems()} items)</span>
+                      <span>${(getTotalPrice() + getBundleDiscount()).toFixed(2)}</span>
+                    </div>
+                    {getBundleDiscount() > 0 && (
+                      <div className="flex justify-between text-terracotta">
+                        <span>Bundle Discount (15%)</span>
+                        <span>-${getBundleDiscount().toFixed(2)}</span>
+                      </div>
+                    )}
+                    <div className="flex justify-between">
+                      <span>After Discount</span>
                       <span>${getTotalPrice().toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between">

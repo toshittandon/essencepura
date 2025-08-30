@@ -20,7 +20,7 @@ import CheckoutForm from "@/components/CheckoutForm";
 import { toast } from "sonner";
 
 const Checkout = () => {
-  const { items, getTotalPrice, getTotalItems, updateQuantity, removeFromCart } = useCart();
+  const { items, getTotalPrice, getTotalItems, updateQuantity, removeFromCart, customPackagingName } = useCart();
   const { isAuthenticated } = useUser();
   const seoData = getSEOData('checkout');
   const { getProduct } = useProducts();
@@ -28,6 +28,13 @@ const Checkout = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isValidatingProducts, setIsValidatingProducts] = useState(true);
   const [productValidationErrors, setProductValidationErrors] = useState([]);
+  const [shippingAddress, setShippingAddress] = useState({
+    firstName: "",
+    lastName: "",
+    address: "",
+    city: "",
+    zipCode: ""
+  });
 
   // Validate products against Appwrite data on mount
   useEffect(() => {
@@ -343,43 +350,78 @@ const Checkout = () => {
                         <div className="grid grid-cols-2 gap-4">
                           <div>
                             <Label htmlFor="firstName">First Name</Label>
-                            <Input id="firstName" placeholder="John" />
+                            <Input 
+                              id="firstName" 
+                              placeholder="John"
+                              value={shippingAddress.firstName}
+                              onChange={(e) => setShippingAddress(prev => ({...prev, firstName: e.target.value}))}
+                            />
                           </div>
                           <div>
                             <Label htmlFor="lastName">Last Name</Label>
-                            <Input id="lastName" placeholder="Doe" />
+                            <Input 
+                              id="lastName" 
+                              placeholder="Doe"
+                              value={shippingAddress.lastName}
+                              onChange={(e) => setShippingAddress(prev => ({...prev, lastName: e.target.value}))}
+                            />
                           </div>
                         </div>
                         <div>
                           <Label htmlFor="address">Address</Label>
-                          <Input id="address" placeholder="123 Main St" />
+                          <Input 
+                            id="address" 
+                            placeholder="123 Main St"
+                            value={shippingAddress.address}
+                            onChange={(e) => setShippingAddress(prev => ({...prev, address: e.target.value}))}
+                          />
                         </div>
                         <div className="grid grid-cols-2 gap-4">
                           <div>
                             <Label htmlFor="city">City</Label>
-                            <Input id="city" placeholder="New York" />
+                            <Input 
+                              id="city" 
+                              placeholder="New York"
+                              value={shippingAddress.city}
+                              onChange={(e) => setShippingAddress(prev => ({...prev, city: e.target.value}))}
+                            />
                           </div>
                           <div>
                             <Label htmlFor="zipCode">ZIP Code</Label>
-                            <Input id="zipCode" placeholder="10001" />
+                            <Input 
+                              id="zipCode" 
+                              placeholder="10001"
+                              value={shippingAddress.zipCode}
+                              onChange={(e) => setShippingAddress(prev => ({...prev, zipCode: e.target.value}))}
+                            />
                           </div>
                         </div>
+                        
+                        {/* Show custom packaging name if set */}
+                        {customPackagingName && (
+                          <div className="p-3 bg-sage/5 rounded-lg border border-sage/20">
+                            <p className="text-sm text-muted-foreground">
+                              <span className="font-medium">Package will be personalized for:</span> {customPackagingName}
+                            </p>
+                          </div>
+                        )}
                       </div>
 
                       <Button 
                         onClick={handleCreatePaymentIntent}
-                        disabled={isLoading || productValidationErrors.length > 0}
+                        disabled={isLoading || productValidationErrors.length > 0 || !shippingAddress.firstName || !shippingAddress.lastName || !shippingAddress.address || !shippingAddress.city || !shippingAddress.zipCode}
                         className="w-full bg-sage hover:bg-sage-dark disabled:opacity-50"
                         size="lg"
                       >
                         {isLoading ? "Processing..." : 
                          productValidationErrors.length > 0 ? "Resolve Cart Issues First" :
+                         (!shippingAddress.firstName || !shippingAddress.lastName || !shippingAddress.address || !shippingAddress.city || !shippingAddress.zipCode) ? "Complete Shipping Address" :
                          "Continue to Payment"}
                       </Button>
                     </div>
                   ) : (
                     <Elements options={options} stripe={stripePromise}>
-                      <CheckoutForm />
+                      <CheckoutForm shippingAddress={shippingAddress} />
                     </Elements>
                   )}
                 </CardContent>

@@ -21,6 +21,9 @@ import PaymentSuccess from "./pages/PaymentSuccess";
 import Login from "./pages/Login";
 import AuthSuccess from "./pages/AuthSuccess";
 import AuthFailure from "./pages/AuthFailure";
+import Quiz from "./pages/Quiz";
+import SkincareQuiz from "./pages/SkincareQuiz";
+import HaircareQuiz from "./pages/HaircareQuiz";
 import NewsletterDebug from "./pages/NewsletterDebug";
 import NotFound from "./pages/NotFound";
 
@@ -46,6 +49,9 @@ const App = () => (
                 <Route path="/about" element={<About />} />
                 <Route path="/ingredients" element={<Ingredients />} />
                 <Route path="/contact" element={<Contact />} />
+                <Route path="/quiz" element={<Quiz />} />
+                <Route path="/quiz/skincare" element={<SkincareQuiz />} />
+                <Route path="/quiz/haircare" element={<HaircareQuiz />} />
                 
                 {/* Protected Routes - Require Authentication */}
                 <Route path="/profile" element={
