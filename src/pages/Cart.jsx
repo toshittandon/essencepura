@@ -39,7 +39,7 @@ const CartItem = ({ item }) => {
           <div className="flex-grow">
             <h3 className="font-semibold text-lg mb-1">{item.name}</h3>
             <p className="text-muted-foreground text-sm mb-2">{item.category}</p>
-            <p className="font-bold text-lg">${item.price.toFixed(2)}</p>
+            <p className="font-bold text-lg">€{item.price.toFixed(2)}</p>
           </div>
 
           {/* Quantity Controls */}
@@ -71,7 +71,7 @@ const CartItem = ({ item }) => {
           {/* Item Total & Remove */}
           <div className="text-right">
             <p className="font-bold text-lg mb-2">
-              ${(item.price * item.quantity).toFixed(2)}
+              €{(item.price * item.quantity).toFixed(2)}
             </p>
             <Button
               variant="ghost"
@@ -179,17 +179,17 @@ const Cart = () => {
                   <div className="space-y-4 mb-6">
                     <div className="flex justify-between">
                       <span>Subtotal ({getTotalItems()} items)</span>
-                      <span>${(getTotalPrice() + getBundleDiscount()).toFixed(2)}</span>
+                      <span>€{(getTotalPrice() + getBundleDiscount()).toFixed(2)}</span>
                     </div>
                     {getBundleDiscount() > 0 && (
                       <div className="flex justify-between text-terracotta">
                         <span>Bundle Discount (15%)</span>
-                        <span>-${getBundleDiscount().toFixed(2)}</span>
+                        <span>-€{getBundleDiscount().toFixed(2)}</span>
                       </div>
                     )}
                     <div className="flex justify-between">
                       <span>After Discount</span>
-                      <span>${getTotalPrice().toFixed(2)}</span>
+                      <span>€{getTotalPrice().toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Shipping</span>
@@ -197,12 +197,12 @@ const Cart = () => {
                     </div>
                     <div className="flex justify-between">
                       <span>Tax</span>
-                      <span>${(getTotalPrice() * 0.08).toFixed(2)}</span>
+                      <span>€{(getTotalPrice() * 0.08).toFixed(2)}</span>
                     </div>
                     <hr />
                     <div className="flex justify-between font-bold text-lg">
                       <span>Total</span>
-                      <span>${(getTotalPrice() * 1.08).toFixed(2)}</span>
+                      <span>€{(getTotalPrice() * 1.08).toFixed(2)}</span>
                     </div>
                   </div>
 

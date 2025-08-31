@@ -275,9 +275,9 @@ export const productService = {
 export const utils = {
   // Format price for display
   formatPrice(price) {
-    return new Intl.NumberFormat('en-US', {
+    return new Intl.NumberFormat('en-EU', {
       style: 'currency',
-      currency: 'USD'
+      currency: 'EUR'
     }).format(price);
   },
 

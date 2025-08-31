@@ -249,11 +249,11 @@ const ProductDetail = () => {
               {/* Price */}
               <div className="flex items-center gap-3">
                 <span className="text-3xl font-bold text-foreground">
-                  ${product.price}
+                  €{product.price}
                 </span>
                 {product.originalPrice && (
                   <span className="text-xl text-muted-foreground line-through">
-                    ${product.originalPrice}
+                    €{product.originalPrice}
                   </span>
                 )}
               </div>
@@ -324,7 +324,7 @@ const ProductDetail = () => {
                     disabled={isOutOfStock}
                   >
                     <ShoppingBag className="h-5 w-5 mr-2" />
-                    {isOutOfStock ? 'Out of Stock' : `Add to Cart - $${(product.price * quantity).toFixed(2)}`}
+                    {isOutOfStock ? 'Out of Stock' : `Add to Cart - €${(product.price * quantity).toFixed(2)}`}
                   </Button>
                   <Button
                     variant="outline"
@@ -408,7 +408,7 @@ const ProductDetail = () => {
                       <div>
                         <h4 className="font-semibold mb-2">Shipping Information</h4>
                         <p className="text-muted-foreground">
-                          Free shipping on orders over $50. Standard delivery takes 3-5 business days.
+                          Free shipping on orders over €50. Standard delivery takes 3-5 business days.
                         </p>
                       </div>
                       <div>

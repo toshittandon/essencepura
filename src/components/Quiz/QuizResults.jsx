@@ -136,7 +136,7 @@ const QuizResults = () => {
             <span className="font-medium">{t.whyChosen}</span> {recommendation.reason}
           </p>
           <div className="flex items-center justify-between">
-            <span className="font-bold text-emerald-600">${product.price}</span>
+            <span className="font-bold text-emerald-600">€{product.price}</span>
             <Button 
               size="sm" 
               onClick={handleAddToCart}

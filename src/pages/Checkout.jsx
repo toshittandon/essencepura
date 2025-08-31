@@ -73,7 +73,7 @@ const Checkout = () => {
                 type: 'price_change',
                 item,
                 currentProduct,
-                message: `Price for ${item.name} has changed from $${item.price} to $${currentProduct.price}`
+                message: `Price for ${item.name} has changed from €${item.price} to €${currentProduct.price}`
               });
             }
             
@@ -302,7 +302,7 @@ const Checkout = () => {
                           </div>
                           <div className="text-right">
                             <p className="font-medium">
-                              ${(item.price * item.quantity).toFixed(2)}
+                              €{(item.price * item.quantity).toFixed(2)}
                             </p>
                           </div>
                         </div>
@@ -315,7 +315,7 @@ const Checkout = () => {
                   <div className="space-y-2">
                     <div className="flex justify-between">
                       <span>Subtotal ({getTotalItems()} items)</span>
-                      <span>${subtotal.toFixed(2)}</span>
+                      <span>€{subtotal.toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Shipping</span>
@@ -323,12 +323,12 @@ const Checkout = () => {
                     </div>
                     <div className="flex justify-between">
                       <span>Tax</span>
-                      <span>${tax.toFixed(2)}</span>
+                      <span>€{tax.toFixed(2)}</span>
                     </div>
                     <Separator />
                     <div className="flex justify-between font-bold text-lg">
                       <span>Total</span>
-                      <span>${total.toFixed(2)}</span>
+                      <span>€{total.toFixed(2)}</span>
                     </div>
                   </div>
                 </CardContent>

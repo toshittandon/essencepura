@@ -159,7 +159,7 @@ const SkincareQuizResults = () => {
             <span className="font-medium">{t.whyChosen}</span> {recommendation.reason}
           </p>
           <div className="flex items-center justify-between">
-            <span className="font-bold text-sage">${product.price}</span>
+            <span className="font-bold text-sage">€{product.price}</span>
             <Button 
               size="sm" 
               onClick={handleAddToCart}
@@ -203,7 +203,7 @@ const SkincareQuizResults = () => {
       <div className="text-sm">
         <div className="font-semibold">Complete routine added to cart!</div>
         <div className="text-xs text-muted-foreground mt-1">
-          {allProducts.length} products • Save ${discountAmount.toFixed(2)} (15% off)
+          {allProducts.length} products • Save €{discountAmount.toFixed(2)} (15% off)
         </div>
       </div>
     );
@@ -251,15 +251,15 @@ const SkincareQuizResults = () => {
               <div className="bg-sage/5 rounded-lg p-4 mb-6 max-w-md mx-auto">
                 <div className="flex justify-between text-sm text-muted-foreground mb-1">
                   <span>Complete Routine ({allProducts.length} products)</span>
-                  <span>${originalTotal.toFixed(2)}</span>
+                  <span>€{originalTotal.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-sm text-terracotta mb-2">
                   <span>Bundle Discount (15%)</span>
-                  <span>-${discountAmount.toFixed(2)}</span>
+                  <span>-€{discountAmount.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between font-bold text-foreground border-t pt-2">
                   <span>Your Price</span>
-                  <span>${finalTotal.toFixed(2)}</span>
+                  <span>€{finalTotal.toFixed(2)}</span>
                 </div>
               </div>
             );

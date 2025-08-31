@@ -351,7 +351,7 @@ const Profile = () => {
                               {order.status}
                             </Badge>
                             <p className="font-semibold mt-1">
-                              ${order.total.toFixed(2)}
+                              €{order.total.toFixed(2)}
                             </p>
                           </div>
                         </div>
@@ -360,7 +360,7 @@ const Profile = () => {
                           {order.items.map((item, index) => (
                             <div key={index} className="flex justify-between text-sm">
                               <span>{item.name} × {item.quantity}</span>
-                              <span>${item.price.toFixed(2)}</span>
+                              <span>€{item.price.toFixed(2)}</span>
                             </div>
                           ))}
                         </div>
