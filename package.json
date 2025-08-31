@@ -17,7 +17,12 @@
     "setup:newsletter": "node scripts/setup-newsletter-collection.js",
     "setup:appwrite": "node scripts/setup-appwrite-collections.js",
     "setup:orders": "node setup-appwrite-collection.js",
-    "upload:products": "node scripts/upload-products-clean.js"
+    "upload:products": "node scripts/upload-products-clean.js",
+    "link:images": "node scripts/link-product-images.js",
+    "link:images:auto": "node scripts/link-product-images.js auto-link",
+    "link:images:list": "node scripts/link-product-images.js list",
+    "link:images:mapping": "node scripts/link-product-images.js mapping",
+    "fix:image-paths": "node scripts/fix-image-paths.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

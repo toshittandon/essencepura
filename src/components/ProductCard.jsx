@@ -7,6 +7,8 @@ import { useUser } from "@/contexts/UserContext";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { getProductImageUrl } from "@/utils/imageUtils";
+import OptimizedImage from "@/components/OptimizedImage";
 
 const ProductCard = ({ product }) => {
   const { addToCart } = useCart();
@@ -16,6 +18,9 @@ const ProductCard = ({ product }) => {
 
   // Use Appwrite document ID for routing
   const productId = product.$id || product.id;
+  
+  // Get the product image URL using the utility function
+  const productImageUrl = getProductImageUrl(product);
 
   const handleAddToCart = (e) => {
     e.preventDefault();
@@ -39,7 +44,7 @@ const ProductCard = ({ product }) => {
       $id: productId,
       name: product.name,
       price: product.price,
-      image: product.image || "/Pura.png",
+      image: productImageUrl,
       category: product.category,
       stock: product.stock
     };
@@ -60,13 +65,10 @@ const ProductCard = ({ product }) => {
         <div className="relative overflow-hidden">
           {/* Product Image */}
           <div className="aspect-square bg-gradient-to-br from-warm-white to-cream p-4 overflow-hidden">
-            <img
-              src={product.image || "/Pura.png"}
-              alt={product.name}
-              className="w-full h-full object-cover rounded-lg"
-              onError={(e) => {
-                e.target.src = "/Pura.png";
-              }}
+            <OptimizedImage
+              product={product}
+              alt={`${product.name} product image`}
+              className="rounded-lg"
             />
           </div>
 
