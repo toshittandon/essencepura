@@ -14,7 +14,7 @@ import { useState } from 'react';
  *   src="/path/to/image.jpg" 
  *   alt="Descriptive alt text" 
  *   className="w-full h-auto"
- *   fallback="/placeholder.svg"
+ *   fallback="/Pura.png"
  * />
  */
 
@@ -22,7 +22,7 @@ export const OptimizedImage = ({
   src,
   alt,
   className = "",
-  fallback = "/placeholder.svg",
+  fallback = "/Pura.png",
   loading = "lazy",
   onLoad,
   onError,

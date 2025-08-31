@@ -137,7 +137,7 @@ const ProductDetail = () => {
       $id: product.$id,
       name: product.name,
       price: product.price,
-      image: product.image || "/placeholder.svg",
+      image: product.image || "/Pura.png",
       category: product.category,
       stock: product.stock
     };
@@ -188,11 +188,11 @@ const ProductDetail = () => {
             <div className="space-y-4">
               <div className="aspect-square bg-gradient-to-br from-warm-white to-cream rounded-lg overflow-hidden p-8">
                 <img
-                  src={product.image || "/placeholder.svg"}
+                  src={product.image || "/Pura.png"}
                   alt={product.name}
                   className="w-full h-full object-cover rounded-lg"
                   onError={(e) => {
-                    e.target.src = "/placeholder.svg";
+                    e.target.src = "/Pura.png";
                   }}
                 />
               </div>

@@ -2,9 +2,16 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Sparkles, ArrowRight } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const ShopQuizBanner = () => {
+  const navigate = useNavigate();
+
+  const handleNavigateToTop = (path) => {
+    navigate(path);
+    window.scrollTo(0, 0);
+  };
+
   return (
     <div className="w-full mb-8">
       <Card className="overflow-hidden shadow-soft border-0 bg-gradient-to-r from-sage/5 to-sage/10">
@@ -26,27 +33,25 @@ const ShopQuizBanner = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
             {/* Skincare Quiz Button */}
-            <Link to="/quiz/skincare" className="block">
-              <Button 
-                size="lg" 
-                className="w-full bg-sage hover:bg-sage-dark text-primary-foreground py-4 group shadow-soft hover:shadow-medium transition-all duration-300"
-              >
-                Find Your Skincare Routine
-                <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-              </Button>
-            </Link>
+            <Button 
+              size="lg" 
+              className="w-full bg-sage hover:bg-sage-dark text-primary-foreground py-4 group shadow-soft hover:shadow-medium transition-all duration-300"
+              onClick={() => handleNavigateToTop('/quiz/skincare')}
+            >
+              Find Your Skincare Routine
+              <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+            </Button>
 
             {/* Haircare Quiz Button */}
-            <Link to="/quiz/haircare" className="block">
-              <Button 
-                size="lg" 
-                variant="outline"
-                className="w-full border-sage text-sage hover:bg-sage hover:text-primary-foreground py-4 group transition-all duration-300"
-              >
-                Find Your Haircare Routine
-                <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-              </Button>
-            </Link>
+            <Button 
+              size="lg" 
+              variant="outline"
+              className="w-full border-sage text-sage hover:bg-sage hover:text-primary-foreground py-4 group transition-all duration-300"
+              onClick={() => handleNavigateToTop('/quiz/haircare')}
+            >
+              Find Your Haircare Routine
+              <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+            </Button>
           </div>
 
           <p className="text-sm text-muted-foreground text-center mt-4">

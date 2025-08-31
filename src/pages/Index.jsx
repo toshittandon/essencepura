@@ -1,16 +1,22 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
-import ProductGrid from "@/components/ProductGrid";
+import FeaturedProducts from "@/components/FeaturedProducts";
 import QuizCTA from "@/components/QuizCTA";
 import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
 import { getSEOData } from "@/utils/seo";
 import { Leaf, Heart, Recycle, Sprout, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Index = () => {
   const seoData = getSEOData('home');
+  const navigate = useNavigate();
+
+  const handleNavigateToTop = (path) => {
+    navigate(path);
+    window.scrollTo(0, 0);
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -80,17 +86,19 @@ const Index = () => {
 
             {/* CTA Button */}
             <div className="text-center mt-12">
-              <Link to="/quiz/skincare">
-                <Button size="lg" className="bg-sage hover:bg-sage-dark text-primary-foreground px-8 py-3 shadow-soft hover:shadow-medium transition-all duration-300">
-                  Start Your Journey
-                  <ArrowRight className="w-5 h-5 ml-2" />
-                </Button>
-              </Link>
+              <Button 
+                size="lg" 
+                className="bg-sage hover:bg-sage-dark text-primary-foreground px-8 py-3 shadow-soft hover:shadow-medium transition-all duration-300"
+                onClick={() => handleNavigateToTop('/quiz/skincare')}
+              >
+                Start Your Journey
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </Button>
             </div>
           </div>
         </section>
 
-        <ProductGrid />
+        <FeaturedProducts limit={6} />
         
         {/* Features Section */}
         <section className="py-16 bg-sage/5">

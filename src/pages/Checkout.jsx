@@ -286,11 +286,11 @@ const Checkout = () => {
                         <div key={item.id} className="flex items-center gap-4">
                           <div className="w-16 h-16 bg-gradient-to-br from-warm-white to-cream rounded-lg overflow-hidden">
                             <img
-                              src={item.image || "/placeholder.svg"}
+                              src={item.image || "/Pura.png"}
                               alt={item.name}
                               className="w-full h-full object-cover"
                               onError={(e) => {
-                                e.target.src = "/placeholder.svg";
+                                e.target.src = "/Pura.png";
                               }}
                             />
                           </div>

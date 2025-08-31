@@ -55,49 +55,49 @@ const HaircareQuizResults = () => {
             id: "anti-hair-fall-shampoo",
             name: "Anti-Hair Fall Caffeine Shampoo",
             price: 28.99,
-            image: "/placeholder.svg"
+            image: "/Pura.png"
         },
         "Shampoo - Moisture Herbal": {
             id: "moisture-herbal-shampoo",
             name: "Moisture Herbal Shampoo",
             price: 26.99,
-            image: "/placeholder.svg"
+            image: "/Pura.png"
         },
         "Conditioner - Protein Strength": {
             id: "protein-strength-conditioner",
             name: "Protein Strength Conditioner",
             price: 24.99,
-            image: "/placeholder.svg"
+            image: "/Pura.png"
         },
         "Conditioner - Moisture & Frizz Control": {
             id: "moisture-frizz-conditioner",
             name: "Moisture & Frizz Control Conditioner",
             price: 24.99,
-            image: "/placeholder.svg"
+            image: "/Pura.png"
         },
         "Hair Mask - Bond Repair": {
             id: "bond-repair-mask",
             name: "Bond Repair Hair Mask",
             price: 32.99,
-            image: "/placeholder.svg"
+            image: "/Pura.png"
         },
         "Hair Mask - Hydration Boost": {
             id: "hydration-boost-mask",
             name: "Hydration Boost Hair Mask",
             price: 30.99,
-            image: "/placeholder.svg"
+            image: "/Pura.png"
         },
         "Hair Serum - Scalp Growth Serum": {
             id: "scalp-growth-serum",
             name: "Scalp Growth Serum",
             price: 38.99,
-            image: "/placeholder.svg"
+            image: "/Pura.png"
         },
         "Hair Serum - Leave-In Shine Serum": {
             id: "leave-in-shine-serum",
             name: "Leave-In Shine Serum",
             price: 29.99,
-            image: "/placeholder.svg"
+            image: "/Pura.png"
         }
     };
 
@@ -106,7 +106,7 @@ const HaircareQuizResults = () => {
             id: recommendation.product.toLowerCase().replace(/\s+/g, '-'),
             name: recommendation.product,
             price: 29.99,
-            image: "/placeholder.svg"
+            image: "/Pura.png"
         };
 
         const handleAddToCart = () => {

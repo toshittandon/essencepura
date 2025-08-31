@@ -399,7 +399,7 @@ const Admin = () => {
                       <CardContent className="p-6">
                         <div className="flex items-start gap-4">
                           <img
-                            src={product.image || "/placeholder.svg"}
+                            src={product.image || "/Pura.png"}
                             alt={product.name}
                             className="w-20 h-20 object-cover rounded"
                           />

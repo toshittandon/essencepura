@@ -1,8 +1,15 @@
 import { ArrowRight, Leaf, Heart, Recycle, Sprout } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Hero = () => {
+  const navigate = useNavigate();
+
+  const handleNavigateToTop = (path) => {
+    navigate(path);
+    window.scrollTo(0, 0);
+  };
+
   return (
     <section className="relative min-h-[80vh] flex items-center justify-center bg-gradient-to-br from-warm-white via-cream to-beige overflow-hidden">
       {/* Background Pattern */}
@@ -40,25 +47,21 @@ const Hero = () => {
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Button
-              asChild
               size="lg"
-              className="bg-sage hover:bg-sage-dark text-primary-foreground shadow-soft hover:shadow-medium transition-all duration-300"
+              className="bg-sage hover:bg-sage-dark text-primary-foreground shadow-soft hover:shadow-medium transition-all duration-300 inline-flex items-center"
+              onClick={() => handleNavigateToTop('/shop')}
             >
-              <Link to="/shop" className="inline-flex items-center">
-                Shop Collection
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
+              Shop Collection
+              <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
             
             <Button
-              asChild
               variant="outline"
               size="lg"
               className="border-sage text-sage hover:bg-sage hover:text-primary-foreground transition-all duration-300"
+              onClick={() => handleNavigateToTop('/about')}
             >
-              <Link to="/about">
-                Our Story
-              </Link>
+              Our Story
             </Button>
           </div>
 

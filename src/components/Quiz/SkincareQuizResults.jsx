@@ -60,73 +60,73 @@ const SkincareQuizResults = () => {
       id: "exfoliating-wash",
       name: "Exfoliating Body Wash",
       price: 24.99,
-      image: "/placeholder.svg"
+      image: "/Pura.png"
     },
     "Body Cleanser - Gentle Sensitive Wash": {
       id: "gentle-wash", 
       name: "Gentle Sensitive Wash",
       price: 22.99,
-      image: "/placeholder.svg"
+      image: "/Pura.png"
     },
     "Face Serum - Brightening Vitamin C": {
       id: "vitamin-c-serum",
       name: "Brightening Vitamin C Serum", 
       price: 34.99,
-      image: "/placeholder.svg"
+      image: "/Pura.png"
     },
     "Face Serum - Repair & Anti-Wrinkle": {
       id: "anti-wrinkle-serum",
       name: "Repair & Anti-Wrinkle Serum",
       price: 39.99,
-      image: "/placeholder.svg"
+      image: "/Pura.png"
     },
     "Face Cream - Barrier Repair": {
       id: "barrier-repair-cream",
       name: "Barrier Repair Face Cream",
       price: 29.99,
-      image: "/placeholder.svg"
+      image: "/Pura.png"
     },
     "Face Cream - Anti-Wrinkle Peptide": {
       id: "peptide-cream",
       name: "Anti-Wrinkle Peptide Cream", 
       price: 32.99,
-      image: "/placeholder.svg"
+      image: "/Pura.png"
     },
     "Sunscreen - Mineral SPF 30": {
       id: "mineral-spf30",
       name: "Mineral Sunscreen SPF 30",
       price: 26.99,
-      image: "/placeholder.svg"
+      image: "/Pura.png"
     },
     "Sunscreen - Hybrid SPF 50+": {
       id: "hybrid-spf50",
       name: "Hybrid Sunscreen SPF 50+", 
       price: 28.99,
-      image: "/placeholder.svg"
+      image: "/Pura.png"
     },
     "Body Moisturizer - Urea Repair Lotion": {
       id: "urea-repair-lotion",
       name: "Urea Repair Body Lotion",
       price: 27.99,
-      image: "/placeholder.svg"
+      image: "/Pura.png"
     },
     "Body Moisturizer - Hydration Glow Lotion": {
       id: "hydration-glow-lotion",
       name: "Hydration Glow Body Lotion",
       price: 25.99,
-      image: "/placeholder.svg"
+      image: "/Pura.png"
     },
     "Lip Balm - Repair Balm": {
       id: "lip-repair-balm",
       name: "Repair Lip Balm",
       price: 12.99,
-      image: "/placeholder.svg"
+      image: "/Pura.png"
     },
     "Lip Balm - Plumping Tint Balm": {
       id: "lip-plump-balm",
       name: "Plumping Tint Lip Balm",
       price: 14.99,
-      image: "/placeholder.svg"
+      image: "/Pura.png"
     }
   };
 
@@ -135,7 +135,7 @@ const SkincareQuizResults = () => {
       id: recommendation.product.toLowerCase().replace(/\s+/g, '-'),
       name: recommendation.product,
       price: 29.99,
-      image: "/placeholder.svg"
+      image: "/Pura.png"
     };
 
     const handleAddToCart = () => {

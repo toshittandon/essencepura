@@ -2,9 +2,16 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Sparkles, ArrowRight, Clock, Target, Gift } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const QuizCTA = () => {
+  const navigate = useNavigate();
+
+  const handleNavigateToTop = (path) => {
+    navigate(path);
+    window.scrollTo(0, 0);
+  };
+
   return (
     <section className="py-16 px-4 bg-sage/5">
       <div className="max-w-6xl mx-auto">
@@ -49,22 +56,24 @@ const QuizCTA = () => {
                 </div>
 
                 {/* Primary CTA */}
-                <Link to="/quiz/skincare">
-                  <Button 
-                    size="lg" 
-                    className="w-full bg-sage hover:bg-sage-dark text-primary-foreground px-8 py-4 text-lg group mb-4 shadow-soft hover:shadow-medium transition-all duration-300"
-                  >
-                    Start your skin quiz
-                    <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-                  </Button>
-                </Link>
+                <Button 
+                  size="lg" 
+                  className="w-full bg-sage hover:bg-sage-dark text-primary-foreground px-8 py-4 text-lg group mb-4 shadow-soft hover:shadow-medium transition-all duration-300"
+                  onClick={() => handleNavigateToTop('/quiz/skincare')}
+                >
+                  Start your skin quiz
+                  <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                </Button>
 
                 {/* Secondary CTA */}
-                <Link to="/quiz/haircare" className="text-center">
-                  <span className="text-sage hover:text-sage-dark font-medium underline transition-colors duration-200">
+                <div className="text-center">
+                  <button 
+                    onClick={() => handleNavigateToTop('/quiz/haircare')}
+                    className="text-sage hover:text-sage-dark font-medium underline transition-colors duration-200"
+                  >
                     Or, discover your haircare ritual
-                  </span>
-                </Link>
+                  </button>
+                </div>
 
                 <p className="text-sm text-muted-foreground mt-4 text-center">
                   ✨ Get instant recommendations • No email required • 100% free
